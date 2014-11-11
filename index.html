@@ -1,0 +1,162 @@
+<html>
+<head>
+	<script src="dist/js/zepto.min.js"></script>
+	<script src="dist/js/seedrandom.min.js"></script>
+	<script src="dist/js/please.js"></script>
+	<script src="dist/js/fx.js"></script>
+	<link rel="stylesheet" type="text/css" href="dist/css/main.css">
+<title>Personal eye-pleasing color generator</title>
+<!--Who the heck even uses meta tags anymore?-->
+<meta name="author" content="Ilya Ulyanov">
+<meta description="See what your flat color is!">
+<!--sharing plugin because I'm too lazy to write my own-->
+<script type="text/javascript">
+window.twttr=(function(d,s,id){var t,js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return}js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);return window.twttr||(t={_e:[],ready:function(f){t._e.push(f)}})}(document,"script","twitter-wjs"));
+</script>
+</head>
+
+
+<body>
+	<div class="Center-Container">
+		<div class="Absolute-Center is-Fixed"><input type="text" autofocus="true" minlength="3" maxlength="64" placeholder="Your name!" id="name"><div id="message"><div id="wrapper-message"><p class=""></p></div></div>
+		
+		<div id="social">
+			<a id="new-button"  ></a>
+			<a id="facebook-btn">Share</a>
+		</div>
+		</div>
+	</div>
+	<div id="credits">by <a href="http://ilyaulyanov.com" target="_blank">Ilya Ulyanov</a></br>Thanks: <a href="https://github.com/Fooidge/PleaseJS" target="_blank">PleaseJS</a>  <a href="http://github.com/davidbau/seedrandom" target="_blank">SeedRandom</a>  <a href="https://github.com/madrobby/zepto" target="_blank">Zepto</a></div>
+
+	<script>
+	//by Ilya Ulyanov http://ilyaulyanov.com http://twitter.com/ilya_ul
+	//***RIDING THE INTERNET HIGHWAY***
+
+	//defining our constants
+	var alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+	var input_name;
+	var posArray = [];
+	var hue = 0;
+	var sat = 0;
+	var val = 0;
+	var seed = [];
+	var total;
+	var result;
+	var result_rgb;
+	var textColor;
+	var synonyms = ["Astonishing", "Astounding", "Awe-inspiring", "Awesome", "Breathtaking", "Extraordinary", "Fabulous", "Fantastic", "Impossible", "Incredible", "Miraculous", "Phenomenal", "Remarkable", "Spectacular", "Stunning", "Unbelievable", "Wonderful"];
+	var word;
+	
+	function getPosition(letter){
+		return letterPosition = $(alphabet).indexOf(letter);
+	}
+	function processName(name){
+		//brushing up input
+		name = name.toLowerCase();
+		name = name.split('');
+		//flushing previous history
+		seed = [];
+		var nameLength = $(name).size();
+		for (var i = 0; i < nameLength; i++) {
+				for(var j = nameLength; j >= 0; j--){
+					//geting position of a letter
+					posArray[i] = getPosition(name[i]);
+
+					//generating seed for more randomness, more randomness!
+					var stringSeed = name[i] + posArray[j];
+
+					//generating random numbers based on seed
+					Math.seedrandom(stringSeed);
+
+					//putting seed in an array
+					seed[i] = Math.random();   
+				}; 
+		};
+		//mixing color
+		makeColor(seed);
+		$('#name').val('');
+	}
+	function makeColor(seedArray){
+		var sSize = $(seedArray).size();
+		
+		var res_hue = 0;
+		//adding values to calculate hue
+		for (var i = 0; i < sSize-2; i++) {
+    		res_hue += seedArray[i];
+		}
+		//setting HSV
+		res_hue = Math.abs(Math.floor(res_hue*100));
+		var res_sat = Math.abs(seedArray[sSize-2].toFixed(2));
+		var res_val = parseFloat(Math.abs(1 - seedArray[sSize-1]).toFixed(2));
+		
+		result = Please.make_color({
+			golden: true, 
+			hue: res_hue, 
+			saturation: res_sat, 
+			value: res_val 
+		});	
+		result_rgb = Please.make_color({
+			golden: true, 
+			hue: Math.abs(res_hue), 
+			saturation: res_sat, 
+			value: res_val,
+			format: "rgb-string"
+		});	
+		makeResponse(res_hue,res_sat,res_val);
+		
+		console.log(getWord());
+	}
+
+
+	function makeResponse(hue,sat,val){
+		$('body').animate({backgroundColor:result_rgb},300,'ease-out');
+		word = synonyms[getWord()];
+		$('#wrapper-message').html('<p>'+word+'! </br> Your very own flat color is: <span id="res" style="color:'+result_rgb+'">' + result + '</span></br> or hsv('+hue+','+sat+','+val+')</br> or '+result_rgb+'</p>');
+		$('#message').animate({opacity:1},500,'ease-out');
+		$('#social').animate({opacity:1},500,'ease-out');
+	}
+
+	function getWord(){
+		Math.seedrandom();
+		return Math.floor(Math.random() * ($(synonyms).size() - 1)) + 1;
+	}
+	function createSocial(ttext){
+		$('#new-button').empty();
+		twttr.widgets.createShareButton(
+				  'http://ilyaulyanov.com/flatcolor',
+				  document.getElementById('new-button'),
+				  {
+				    count: 'none',
+				    text: ttext,
+				    via: 'ilya_ul'
+				  });
+	}
+	function fbShare(url, title, descr, image, winWidth, winHeight) {
+		var winTop = (screen.height / 2) - (winHeight / 2);
+		var winLeft = (screen.width / 2) - (winWidth / 2);
+		window.open('http://www.facebook.com/sharer.php?s=100&p[title]=' + title + '&p[summary]=' + descr + '&p[url]=' + url + '&p[images][0]=' + image, 'sharer', 'top=' + winTop + ',left=' + winLeft + ',toolbar=0,status=0,width=' + winWidth + ',height=' + winHeight);
+	}
+	Zepto(function($){
+
+		$('#name').on('keypress', function(e){
+			if(e.which == 13){
+				processName($('#name').val());
+				textColor = 'My very own eye-pleasing color is ' + result + '! Get yours at';
+				createSocial(textColor);
+			}
+		});
+		$('#facebook-btn').on('click', function(){
+			fbShare('http://jsfiddle.net/stichoza/EYxTJ/', 'Personal eye-pleasing color generator', 'fsaf', 'http://goo.gl/dS52U', 520, 350);
+		})
+		});
+	</script>
+	<script>window.twttr = (function (d, s, id) {
+  var t, js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src= "https://platform.twitter.com/widgets.js";
+  fjs.parentNode.insertBefore(js, fjs);
+  return window.twttr || (t = { _e: [], ready: function (f) { t._e.push(f) } });
+}(document, "script", "twitter-wjs"));</script>
+</body>
+</html>

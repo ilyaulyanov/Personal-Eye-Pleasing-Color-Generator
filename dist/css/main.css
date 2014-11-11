@@ -1,0 +1,130 @@
+body,html{
+	margin:0;
+	width:100%;
+	height:100%;
+	text-align: center;
+	overflow: hidden;
+	font-family:sans-serif;
+}
+@media (max-width: 480px){
+	  #message p{
+    font-size:10pt;
+  }
+	  #social{
+  	width:60%;
+  }
+  .Absolute-Center{
+  	width:100%;
+  }
+  .a2a_kit{
+  	width:100%;
+  }
+}
+@media (min-width: 480px ) and (max-width:1023px){
+  #message p{
+    font-size:18pt;
+  }
+  #social{
+  	width:60%;
+  }
+  .Absolute-Center{
+  	width:100%;
+  }
+  .a2a_kit{
+  	width:100%;
+  }
+}
+@media (min-width: 1024px ) and (max-width:1599px) {
+  #message p{
+    font-size:18pt;
+  }
+  #social{
+  	width:60%;
+  }
+  .Absolute-Center{
+  	width:100%;
+  }
+  #social{
+  	width:60%;
+  }
+    .a2a_kit{
+  	width:100%;
+  }
+}
+@media (min-width: 1600px ) {
+  #message p{
+    font-size:18pt;
+  }
+  #social{
+  	width:60%;
+  }
+  .Absolute-Center{
+  	width:50%;
+  }
+}
+
+#name{
+	padding: 10px;
+	font-size: 28pt;
+	width:60%;
+	box-shadow: 0px 0px 1.5px rgb(12,12,12);
+border: 0;
+}
+#message{
+	background: #fff;
+	width:60%;	
+	height:12em;
+	box-shadow: 0px 1px 1.5px rgb(12,12,12);
+	margin: 0px auto;
+	text-align: center;
+	position: relative;
+	opacity: 0;
+}
+#message p{
+	width: 100%;
+	color: #333;
+	display: block;
+	margin-top: 20px;
+}
+#wrapper-message{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
+#social{
+	margin: 20px auto;
+	position: relative;
+	opacity: 0;
+}
+.Center-Container {
+  position: relative;
+}
+
+.Absolute-Center {
+  height: 50%;
+  overflow: hidden;
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+}
+.Absolute-Center.is-Fixed { 
+  position: fixed;
+  z-index: 999;
+}
+.a2a_kit{
+	
+	margin:0px auto;
+}
+
+#credits{
+	color:#333;
+	font-size:8pt;
+	position: absolute;
+	bottom: 20px;
+	left: 0;
+	right: 0;
+}
+#credits a{
+
+	color:#333;
+}
